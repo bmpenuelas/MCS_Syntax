@@ -1,0 +1,52 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+file_extensions:
+  - mcs
+scope: source.mcs
+
+contexts:
+  main:
+    # Strings begin and end with quotes, and use backslashes as an escape
+    # character
+    - match: ':'
+      set: byte_count
+
+
+  byte_count:
+    - match: '(\w{2})\s*'
+      captures:
+        1: keyword.control
+      set: add
+
+  add:
+    - match: '(\w{6})\s*'
+      captures:
+        1: invalid.illegal
+      set: data1
+
+  data1:
+    - match: '(\w{8}|\w{4}|\w{2})\s*(\w{2})\s*$'
+      captures:
+        1: constant.numeric
+        2: keyword.control
+      set: main
+
+    - match: '\w{8}|\w{4}|\w{2}\s*'
+      scope: constant.numeric
+      set: data2
+
+  data2:
+    - match: '(\w{8}|\w{4}|\w{2})\s*(\w{2})\s*$'
+      captures:
+        1: entity.name
+        2: keyword.control
+      set: main
+
+    - match: '\w{8}|\w{4}|\w{2}\s*'
+      scope: entity.name
+      set: data1
+
+  cksum:
+    - match: '\w{2}$'
+      scope: entity.name
